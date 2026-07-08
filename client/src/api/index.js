@@ -59,7 +59,10 @@ export const checkAuth = async () => {
     method: 'GET',
     credentials: 'include'
   });
-  return handleResponse(res);
+  if (res.status === 401) throw new Error('Unauthorized');
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.msg || 'API Request Failed');
+  return data;
 };
 
 // --- PROJECTS ---
