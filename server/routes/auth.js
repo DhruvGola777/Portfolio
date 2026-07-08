@@ -27,11 +27,10 @@ router.post('/login', async (req, res) => {
     jwt.sign(payload, JWT_SECRET, { expiresIn: '1d' }, (err, token) => {
       if (err) throw err;
       
-      const isProd = process.env.NODE_ENV === 'production';
       res.cookie('token', token, {
         httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'strict',
+        secure: true,
+        sameSite: 'none',
         maxAge: 24 * 60 * 60 * 1000 // 1 day
       });
       
@@ -47,11 +46,10 @@ router.post('/login', async (req, res) => {
 // @desc    Admin Logout
 // @access  Public
 router.post('/logout', (req, res) => {
-  const isProd = process.env.NODE_ENV === 'production';
   res.clearCookie('token', {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'strict',
+    secure: true,
+    sameSite: 'none',
   });
   res.json({ msg: 'Logged out successfully' });
 });
