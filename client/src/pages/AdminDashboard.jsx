@@ -100,6 +100,9 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
                 </button>
               ))}
               <div className="h-px bg-white/10 my-2 mx-2" />
+              <a href="/" className="flex items-center justify-center gap-2 px-4 py-3 text-center border border-white/10 rounded-lg hover:bg-white/5 transition-colors text-sm font-medium text-gray-300 hover:text-white">
+                <ExternalLink size={16} /> View Live Site
+              </a>
               <button 
                 onClick={handleLogout} 
                 className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-500 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors font-medium text-sm"
