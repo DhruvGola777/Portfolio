@@ -10,7 +10,8 @@ const Hero = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/profile');
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const res = await fetch(`${API_URL}/profile`);
         if (res.ok) {
           const data = await res.json();
           if (data.resumeUrl) {
