@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import useExperience from '../hooks/useExperience';
 
 const AdminExperience = () => {
@@ -34,9 +35,9 @@ const AdminExperience = () => {
         {!showForm && (
           <button 
             onClick={() => setShowForm(true)}
-            className="px-4 py-2 bg-accent text-white font-bold rounded-lg hover:bg-accent/80 transition-colors text-sm"
+            className="px-4 py-2 bg-accent text-white font-bold rounded-lg hover:bg-accent/80 transition-colors text-sm flex items-center gap-2"
           >
-            Add Event +
+            <Plus size={16} /> <span className="hidden sm:inline">Add Event</span><span className="sm:hidden">Add</span>
           </button>
         )}
       </div>
@@ -94,7 +95,7 @@ const AdminExperience = () => {
           {experiences.length === 0 && (
             <div className="text-center py-12 border border-white/10 border-dashed rounded-2xl bg-white/5">
               <h3 className="text-xl font-bold text-gray-300 mb-2">No experience events found</h3>
-              <p className="text-gray-500 text-sm">Click the 'Add Event +' button above to add your first timeline entry.</p>
+              <p className="text-gray-500 text-sm">Click the Add button above to add your first timeline entry.</p>
             </div>
           )}
           {experiences.map((exp) => (
