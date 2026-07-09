@@ -77,6 +77,19 @@ const ProjectMedia = ({ project }) => {
     );
   }
 
+  if (project.videoUrl) {
+    return (
+      <video 
+        src={project.videoUrl} 
+        autoPlay 
+        loop 
+        muted 
+        playsInline 
+        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+      />
+    );
+  }
+
   if (project.mediaUrl) {
     if (project.mediaUrl.match(/\.(mp4|webm)$/i)) {
       return (

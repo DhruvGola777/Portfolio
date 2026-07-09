@@ -114,7 +114,7 @@ const useProjects = () => {
           data.append('gallery', file);
         }
         const result = await uploadGallery(data);
-        setFormData({ ...formData, gallery: [...(formData.gallery || []), ...result.galleryUrls] });
+        setFormData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...result.galleryUrls] }));
         toast.success('Gallery uploaded successfully!');
       } else {
         let file = files[0];
@@ -124,9 +124,9 @@ const useProjects = () => {
         data.append('media', file);
         const result = await uploadMedia(data);
         if (type === 'video') {
-          setFormData({ ...formData, videoUrl: result.mediaUrl });
+          setFormData(prev => ({ ...prev, videoUrl: result.mediaUrl }));
         } else {
-          setFormData({ ...formData, mediaUrl: result.mediaUrl });
+          setFormData(prev => ({ ...prev, mediaUrl: result.mediaUrl }));
         }
         toast.success('Media uploaded successfully!');
       }
