@@ -17,6 +17,7 @@ const useProjects = () => {
     githubLink: '',
     caseStudy: '',
     mediaUrl: '',
+    videoUrl: '',
     gallery: []
   });
 
@@ -53,7 +54,7 @@ const useProjects = () => {
         toast.success('Project created successfully!');
       }
       
-      setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', gallery: [] });
+      setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', videoUrl: '', gallery: [] });
       setEditingId(null);
       fetchProjects();
     } catch (err) {
@@ -72,6 +73,7 @@ const useProjects = () => {
       githubLink: proj.githubLink || '',
       caseStudy: proj.caseStudy || '',
       mediaUrl: proj.mediaUrl || '',
+      videoUrl: proj.videoUrl || '',
       gallery: proj.gallery || []
     });
   };
@@ -114,6 +116,12 @@ const useProjects = () => {
         const result = await uploadGallery(data);
         setFormData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...result.galleryUrls] }));
         toast.success('Gallery uploaded successfully!');
+      } else if (type === 'video') {
+        let file = files[0];
+        data.append('media', file);
+        const result = await uploadMedia(data);
+        setFormData(prev => ({ ...prev, videoUrl: result.mediaUrl }));
+        toast.success('Video uploaded successfully!');
       } else {
         let file = files[0];
         if (file.type.startsWith('image/')) {
@@ -134,7 +142,7 @@ const useProjects = () => {
 
   const cancelEdit = () => {
     setEditingId(null);
-    setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', gallery: [] });
+    setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', videoUrl: '', gallery: [] });
   };
 
   return {

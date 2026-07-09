@@ -92,6 +92,23 @@ const AdminProjects = () => {
                 </p>
               )}
             </div>
+
+            <div className="p-4 bg-black/30 border border-white/10 rounded-lg">
+              <label className="block text-xs font-medium text-gray-400 mb-2">Project Video Demo (Optional)</label>
+              <input 
+                type="file" 
+                accept="video/*" 
+                onChange={(e) => handleMediaUpload(e, 'video')} 
+                disabled={uploadingMedia}
+                className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-white hover:file:bg-accent/80 transition-colors"
+              />
+              {uploadingMedia && <p className="text-xs text-accent mt-2">Uploading...</p>}
+              {formData.videoUrl && (
+                <p className="text-xs text-green-400 mt-2">
+                  ✅ Video uploaded! <a href={formData.videoUrl} target="_blank" rel="noreferrer" className="underline hover:text-green-300">View File</a>
+                </p>
+              )}
+            </div>
           
           <div className="p-4 bg-black/30 border border-white/10 rounded-lg">
             <label className="block text-xs font-medium text-gray-400 mb-2">Project Image Gallery (Upload multiple images)</label>
