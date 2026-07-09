@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchProjects as apiFetchProjects, createProject, updateProject, deleteProject, uploadMedia, uploadGallery } from '../api';
 import toast from 'react-hot-toast';
+import imageCompression from 'browser-image-compression';
 
 const useProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -96,16 +97,31 @@ const useProjects = () => {
     setUploadingMedia(true);
     const data = new FormData();
     
+    // Compression options
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
     try {
       if (type === 'gallery') {
         for (let i = 0; i < files.length; i++) {
-          data.append('gallery', files[i]);
+          let file = files[i];
+          if (file.type.startsWith('image/')) {
+            try { file = await imageCompression(file, options); } catch (e) { console.error("Compression failed", e); }
+          }
+          data.append('gallery', file);
         }
         const result = await uploadGallery(data);
         setFormData({ ...formData, gallery: [...(formData.gallery || []), ...result.galleryUrls] });
         toast.success('Gallery uploaded successfully!');
       } else {
-        data.append('media', files[0]);
+        let file = files[0];
+        if (type !== 'video' && file.type.startsWith('image/')) {
+          try { file = await imageCompression(file, options); } catch (e) { console.error("Compression failed", e); }
+        }
+        data.append('media', file);
         const result = await uploadMedia(data);
         if (type === 'video') {
           setFormData({ ...formData, videoUrl: result.mediaUrl });
