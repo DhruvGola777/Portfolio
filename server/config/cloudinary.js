@@ -18,12 +18,13 @@ const resumeStorage = new CloudinaryStorage({
   }
 });
 
-// Storage for Project Images
+// Storage for Project Images and Videos
 const mediaStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'portfolio/projects',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'gif'],
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'gif', 'mp4', 'webm', 'mov'],
+    resource_type: 'auto'
   }
 });
 
