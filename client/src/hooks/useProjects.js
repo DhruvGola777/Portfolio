@@ -112,12 +112,15 @@ const useProjects = () => {
           }
           data.append('gallery', file);
         }
+        if (editingId) {
+          data.append('projectId', editingId);
+        }
         const result = await uploadGallery(data);
         const updatedGallery = [...existingGallery, ...result.galleryUrls];
         setFormData(prev => ({ ...prev, gallery: updatedGallery }));
         toast.success('Gallery uploaded successfully!');
 
-        if (editingId) {
+        if (editingId && !result.projectUpdated) {
           await updateProject(editingId, { gallery: updatedGallery });
           await fetchProjects();
         }
@@ -127,11 +130,14 @@ const useProjects = () => {
           try { file = await imageCompression(file, options); } catch (e) { console.error("Compression failed", e); }
         }
         data.append('media', file);
+        if (editingId) {
+          data.append('projectId', editingId);
+        }
         const result = await uploadMedia(data);
         setFormData(prev => ({ ...prev, mediaUrl: result.mediaUrl }));
         toast.success('Media uploaded successfully!');
 
-        if (editingId) {
+        if (editingId && !result.projectUpdated) {
           await updateProject(editingId, { mediaUrl: result.mediaUrl });
           await fetchProjects();
         }

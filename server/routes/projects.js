@@ -105,8 +105,18 @@ router.post('/upload-media', auth, mediaUpload.single('media'), async (req, res)
     
     // Delete local file
     try { fs.unlinkSync(req.file.path); } catch(e) {}
+
+    let projectUpdated = false;
+    if (req.body.projectId) {
+      const project = await Project.findById(req.body.projectId);
+      if (project) {
+        project.mediaUrl = result.secure_url;
+        await project.save();
+        projectUpdated = true;
+      }
+    }
     
-    res.json({ msg: 'Media uploaded successfully', mediaUrl: result.secure_url });
+    res.json({ msg: 'Media uploaded successfully', mediaUrl: result.secure_url, projectUpdated });
   } catch (err) {
     console.error("Cloudinary Upload Error:", err);
     res.status(500).json({ msg: err.message || 'Server Error during upload' });
@@ -133,8 +143,18 @@ router.post('/upload-gallery', auth, mediaUpload.array('gallery', 10), async (re
       // Delete local file
       try { fs.unlinkSync(file.path); } catch(e) {}
     }
+
+    let projectUpdated = false;
+    if (req.body.projectId) {
+      const project = await Project.findById(req.body.projectId);
+      if (project) {
+        project.gallery = [...(project.gallery || []), ...fileUrls];
+        await project.save();
+        projectUpdated = true;
+      }
+    }
     
-    res.json({ msg: 'Gallery uploaded successfully', galleryUrls: fileUrls });
+    res.json({ msg: 'Gallery uploaded successfully', galleryUrls: fileUrls, projectUpdated });
   } catch (err) {
     console.error("Cloudinary Gallery Upload Error:", err);
     res.status(500).json({ msg: err.message || 'Server Error during gallery upload' });
