@@ -38,6 +38,19 @@ const ProjectMedia = ({ project }) => {
     exit: (direction) => ({ x: direction < 0 ? '100%' : '-100%', zIndex: 0 })
   };
 
+  if (project.videoUrl) {
+    return (
+      <video 
+        src={project.videoUrl} 
+        autoPlay 
+        loop 
+        muted 
+        playsInline 
+        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+      />
+    );
+  }
+
   if (galleryLen > 0) {
     return (
       <div className="w-full h-full relative group/gallery overflow-hidden">
@@ -77,18 +90,7 @@ const ProjectMedia = ({ project }) => {
     );
   }
 
-  if (project.videoUrl) {
-    return (
-      <video 
-        src={project.videoUrl} 
-        autoPlay 
-        loop 
-        muted 
-        playsInline 
-        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-      />
-    );
-  }
+
 
   if (project.mediaUrl) {
     if (project.mediaUrl.match(/\.(mp4|webm)$/i)) {

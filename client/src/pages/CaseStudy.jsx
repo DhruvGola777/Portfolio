@@ -127,6 +127,7 @@ const CaseStudy = () => {
               loop 
               muted 
               playsInline 
+              controls
               className="w-full h-full object-cover object-top"
             />
           ) : project.mediaUrl ? (

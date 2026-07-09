@@ -104,9 +104,10 @@ const AdminProjects = () => {
               />
               {uploadingMedia && <p className="text-xs text-accent mt-2">Uploading...</p>}
               {formData.videoUrl && (
-                <p className="text-xs text-green-400 mt-2">
-                  ✅ Video uploaded! <a href={formData.videoUrl} target="_blank" rel="noreferrer" className="underline hover:text-green-300">View File</a>
-                </p>
+                <div className="mt-4">
+                  <p className="text-xs text-green-400 mb-2">✅ Video uploaded!</p>
+                  <video src={formData.videoUrl} controls className="w-full max-h-48 object-cover rounded border border-white/20" />
+                </div>
               )}
             </div>
           
