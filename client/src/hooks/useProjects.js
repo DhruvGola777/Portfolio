@@ -17,7 +17,6 @@ const useProjects = () => {
     githubLink: '',
     caseStudy: '',
     mediaUrl: '',
-    videoUrl: '',
     gallery: []
   });
 
@@ -54,7 +53,7 @@ const useProjects = () => {
         toast.success('Project created successfully!');
       }
       
-      setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', videoUrl: '', gallery: [] });
+      setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', gallery: [] });
       setEditingId(null);
       fetchProjects();
     } catch (err) {
@@ -73,7 +72,6 @@ const useProjects = () => {
       githubLink: proj.githubLink || '',
       caseStudy: proj.caseStudy || '',
       mediaUrl: proj.mediaUrl || '',
-      videoUrl: proj.videoUrl || '',
       gallery: proj.gallery || []
     });
   };
@@ -118,16 +116,12 @@ const useProjects = () => {
         toast.success('Gallery uploaded successfully!');
       } else {
         let file = files[0];
-        if (type !== 'video' && file.type.startsWith('image/')) {
+        if (file.type.startsWith('image/')) {
           try { file = await imageCompression(file, options); } catch (e) { console.error("Compression failed", e); }
         }
         data.append('media', file);
         const result = await uploadMedia(data);
-        if (type === 'video') {
-          setFormData(prev => ({ ...prev, videoUrl: result.mediaUrl }));
-        } else {
-          setFormData(prev => ({ ...prev, mediaUrl: result.mediaUrl }));
-        }
+        setFormData(prev => ({ ...prev, mediaUrl: result.mediaUrl }));
         toast.success('Media uploaded successfully!');
       }
     } catch (err) {
@@ -140,7 +134,7 @@ const useProjects = () => {
 
   const cancelEdit = () => {
     setEditingId(null);
-    setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', videoUrl: '', gallery: [] });
+    setFormData({ title: '', description: '', tech: '', liveLink: '', githubLink: '', caseStudy: '', mediaUrl: '', gallery: [] });
   };
 
   return {
