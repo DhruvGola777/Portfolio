@@ -29,10 +29,6 @@ const projectSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  videoUrl: {
-    type: String,
-    default: ''
-  },
   gallery: [{
     type: String
   }],

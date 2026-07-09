@@ -120,17 +120,7 @@ const CaseStudy = () => {
           transition={{ duration: 1, delay: 0.2 }}
           className="w-full aspect-[21/9] bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 rounded-2xl flex items-center justify-center relative overflow-hidden"
         >
-          {project.videoUrl ? (
-            <video 
-              src={project.videoUrl} 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              controls
-              className="w-full h-full object-cover object-top"
-            />
-          ) : project.mediaUrl ? (
+          {project.mediaUrl ? (
             project.mediaUrl.match(/\.(mp4|webm)$/i) ? (
               <video 
                 src={project.mediaUrl} 
