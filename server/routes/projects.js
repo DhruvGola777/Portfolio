@@ -98,10 +98,11 @@ router.post('/upload-media', auth, mediaUpload.single('media'), async (req, res)
       return res.status(400).json({ msg: 'No file uploaded' });
     }
     
-    // Upload to Cloudinary manually for better stability
-    const result = await cloudinary.uploader.upload(req.file.path, {
+    // Upload to Cloudinary using upload_large for large video files
+    const result = await cloudinary.uploader.upload_large(req.file.path, {
       folder: 'portfolio/projects',
-      resource_type: 'auto'
+      resource_type: 'auto',
+      chunk_size: 6000000 // 6MB chunks
     });
     
     // Delete local file
@@ -109,8 +110,8 @@ router.post('/upload-media', auth, mediaUpload.single('media'), async (req, res)
     
     res.json({ msg: 'Media uploaded successfully', mediaUrl: result.secure_url });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error("Cloudinary Upload Error:", err);
+    res.status(500).json({ msg: err.message || 'Server Error during upload' });
   }
 });
 
@@ -124,9 +125,10 @@ router.post('/upload-gallery', auth, mediaUpload.array('gallery', 10), async (re
     
     const fileUrls = [];
     for (const file of req.files) {
-      const result = await cloudinary.uploader.upload(file.path, {
+      const result = await cloudinary.uploader.upload_large(file.path, {
         folder: 'portfolio/projects',
-        resource_type: 'auto'
+        resource_type: 'auto',
+        chunk_size: 6000000
       });
       fileUrls.push(result.secure_url);
       
@@ -136,8 +138,8 @@ router.post('/upload-gallery', auth, mediaUpload.array('gallery', 10), async (re
     
     res.json({ msg: 'Gallery uploaded successfully', galleryUrls: fileUrls });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error("Cloudinary Gallery Upload Error:", err);
+    res.status(500).json({ msg: err.message || 'Server Error during gallery upload' });
   }
 });
 
