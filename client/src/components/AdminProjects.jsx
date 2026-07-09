@@ -85,6 +85,7 @@ const AdminProjects = () => {
                 disabled={uploadingMedia}
                 className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-white hover:file:bg-accent/80 transition-colors"
               />
+              <p className="text-xs text-gray-400 mt-2">After upload completes, click Save Project to keep the image URL in the project record.</p>
               {uploadingMedia && <p className="text-xs text-accent mt-2">Uploading...</p>}
               {formData.mediaUrl && (
                 <p className="text-xs text-green-400 mt-2">

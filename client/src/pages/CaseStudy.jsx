@@ -42,6 +42,8 @@ const CaseStudy = () => {
 
   if (!project) return null;
 
+  const heroImageUrl = project.mediaUrl || (project.gallery && project.gallery.length > 0 ? project.gallery[0] : '');
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-accent selection:text-white pb-32">
       {/* Decorative noise/texture effect */}

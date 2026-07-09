@@ -104,6 +104,7 @@ const useProjects = () => {
 
     try {
       if (type === 'gallery') {
+        const existingGallery = formData.gallery || [];
         for (let i = 0; i < files.length; i++) {
           let file = files[i];
           if (file.type.startsWith('image/')) {
@@ -112,8 +113,14 @@ const useProjects = () => {
           data.append('gallery', file);
         }
         const result = await uploadGallery(data);
-        setFormData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...result.galleryUrls] }));
+        const updatedGallery = [...existingGallery, ...result.galleryUrls];
+        setFormData(prev => ({ ...prev, gallery: updatedGallery }));
         toast.success('Gallery uploaded successfully!');
+
+        if (editingId) {
+          await updateProject(editingId, { gallery: updatedGallery });
+          await fetchProjects();
+        }
       } else {
         let file = files[0];
         if (file.type.startsWith('image/')) {
@@ -123,6 +130,11 @@ const useProjects = () => {
         const result = await uploadMedia(data);
         setFormData(prev => ({ ...prev, mediaUrl: result.mediaUrl }));
         toast.success('Media uploaded successfully!');
+
+        if (editingId) {
+          await updateProject(editingId, { mediaUrl: result.mediaUrl });
+          await fetchProjects();
+        }
       }
     } catch (err) {
       console.error(err);
