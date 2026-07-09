@@ -53,7 +53,7 @@ const ProjectMedia = ({ project }) => {
             animate="center"
             exit="exit"
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full h-full object-cover object-top absolute inset-0"
+            className="w-full h-full object-contain absolute inset-0"
             alt={`${project.title} gallery ${currentIndex + 1}`}
             loading="lazy"
           />
@@ -98,7 +98,7 @@ const ProjectMedia = ({ project }) => {
         <img 
           src={project.mediaUrl} 
           alt={project.title} 
-          className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" 
+          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" 
           loading="lazy"
         />
       );
