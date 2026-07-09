@@ -6,8 +6,24 @@ const { mediaStorage } = require('../config/cloudinary');
 const Project = require('../models/Project');
 const auth = require('../middleware/auth');
 
-// Setup multer for project media using Cloudinary
-const mediaUpload = multer({ storage: mediaStorage });
+// Setup multer to use local disk storage first to handle large video files safely
+const fs = require('fs');
+const uploadDir = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir)
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname.replace(/\s+/g, '-'))
+  }
+});
+
+const mediaUpload = multer({ storage: storage });
+const { cloudinary } = require('../config/cloudinary');
 
 // @route   GET /api/projects
 // @desc    Get all projects (Public)
@@ -82,8 +98,16 @@ router.post('/upload-media', auth, mediaUpload.single('media'), async (req, res)
       return res.status(400).json({ msg: 'No file uploaded' });
     }
     
-    const fileUrl = req.file.path;
-    res.json({ msg: 'Media uploaded successfully', mediaUrl: fileUrl });
+    // Upload to Cloudinary manually for better stability
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'portfolio/projects',
+      resource_type: 'auto'
+    });
+    
+    // Delete local file
+    try { fs.unlinkSync(req.file.path); } catch(e) {}
+    
+    res.json({ msg: 'Media uploaded successfully', mediaUrl: result.secure_url });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -98,7 +122,18 @@ router.post('/upload-gallery', auth, mediaUpload.array('gallery', 10), async (re
       return res.status(400).json({ msg: 'No files uploaded' });
     }
     
-    const fileUrls = req.files.map(file => file.path);
+    const fileUrls = [];
+    for (const file of req.files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: 'portfolio/projects',
+        resource_type: 'auto'
+      });
+      fileUrls.push(result.secure_url);
+      
+      // Delete local file
+      try { fs.unlinkSync(file.path); } catch(e) {}
+    }
+    
     res.json({ msg: 'Gallery uploaded successfully', galleryUrls: fileUrls });
   } catch (err) {
     console.error(err.message);
