@@ -1,8 +1,8 @@
 const NodeCache = require('node-cache');
 
-// Standard TTL (Time To Live) is set to 1 hour (3600 seconds)
-// checkperiod checks for expired entries every 120 seconds
-const cache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
+// Standard TTL (Time To Live) is set to 0 (infinite)
+// checkperiod is set to 0 to disable periodic checks since it won't expire
+const cache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 
 /**
  * Express middleware to cache responses.
