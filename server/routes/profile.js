@@ -5,13 +5,14 @@ const multer = require('multer');
 const { resumeStorage } = require('../config/cloudinary');
 const Profile = require('../models/Profile');
 const auth = require('../middleware/auth');
+const { cacheMiddleware, clearCache } = require('../config/cache');
 
 // Setup multer for resume upload using Cloudinary
 const upload = multer({ storage: resumeStorage });
 
 // @route   GET /api/profile
 // @desc    Get profile details (Public)
-router.get('/', async (req, res) => {
+router.get('/', cacheMiddleware(), async (req, res) => {
   try {
     const profile = await Profile.findOne();
     if (!profile) {
@@ -36,12 +37,14 @@ router.post('/', auth, async (req, res) => {
         { $set: req.body },
         { new: true }
       );
+      clearCache('/api/profile');
       return res.json(profile);
     }
 
     // Create new if doesn't exist
     profile = new Profile(req.body);
     await profile.save();
+    clearCache('/api/profile');
     res.json(profile);
   } catch (err) {
     console.error(err.message);
@@ -69,6 +72,7 @@ router.post('/upload-resume', auth, upload.single('resume'), async (req, res) =>
     }
     await profile.save();
 
+    clearCache('/api/profile');
     res.json({ msg: 'Resume uploaded successfully', resumeUrl: fileUrl });
   } catch (err) {
     console.error(err.message);
